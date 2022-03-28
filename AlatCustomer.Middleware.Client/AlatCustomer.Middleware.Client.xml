@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AlatCustomer.Middleware.Client</name>
+    </assembly>
+    <members>
+        <member name="M:AlatCustomer.Middleware.Client.Controllers.CustomerController.OnboardCustomer(AlatCustomer.Middleware.Core.DTOs.Customer.OnboardCustomerRequestDTO)">
+            <summary>
+            onboard customer
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AlatCustomer.Middleware.Client.Controllers.ResourcesController.GetStates">
+            <summary>
+            Request to get list of states
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AlatCustomer.Middleware.Client.Controllers.ResourcesController.GetLocalGovernments(System.String)">
+            <summary>
+            Request to get list of local governments by statecode
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AlatCustomer.Middleware.Client.Controllers.ResourcesController.SendOtp(AlatCustomer.Middleware.Core.DTOs.Resources.SendOtpRequestDTO)">
+            <summary>
+            Send otp to customer
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
