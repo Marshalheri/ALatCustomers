@@ -9,5 +9,6 @@ namespace AlatCustomer.Middleware.Core
         Task<PayloadResponse<GetStatesResponse>> GetStatesAsync();
         Task<PayloadResponse<GetLocalGovernmentsResponse>> GetLocalGovernmentsAsync(string stateCode);
         Task<BasicResponse> SendOtpAsync(SendOtpRequestDTO request);
+        Task<PayloadResponse<GetAllBanksResponseDTO>> GetBanksAsync();
     }
 }

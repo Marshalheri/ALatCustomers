@@ -6,7 +6,6 @@ using AlatCustomer.Middleware.Core.Repository;
 using AlatCustomer.Middleware.Core.Services;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +34,7 @@ namespace AlatCustomer.Middleware.Core.Implementations
             if (state == null)
             {
                 return ErrorResponse.Create<BasicResponse>(
-                    FaultMode.CLIENT_INVALID_ARGUMENT,
+                    FaultMode.REQUESTED_ENTITY_NOT_FOUND,
                     ResponseCodes.NO_STATE_FOUND,
                     _messageProvider.GetMessage(ResponseCodes.NO_STATE_FOUND));
             }
@@ -43,7 +42,7 @@ namespace AlatCustomer.Middleware.Core.Implementations
             if (lga == null)
             {
                 return ErrorResponse.Create<BasicResponse>(
-                    FaultMode.CLIENT_INVALID_ARGUMENT,
+                    FaultMode.REQUESTED_ENTITY_NOT_FOUND,
                     ResponseCodes.NO_LGA_FOUND,
                     _messageProvider.GetMessage(ResponseCodes.NO_LGA_FOUND));
             }
@@ -65,7 +64,35 @@ namespace AlatCustomer.Middleware.Core.Implementations
                 Password = passwordByte
             };
 
-            
+            await _unitOfWork.CustomerRepository.AddAsync(newCustomer);
+            await _unitOfWork.SaveAsync();
+            response.IsSuccessful = true;
+            return response;
+        }
+
+        public async Task<PayloadResponse<GetAllCustomersDetailsResponseDTO>> GetAllOnboardedCustomerAsync()
+        {
+            PayloadResponse<GetAllCustomersDetailsResponseDTO> response = new(false);
+            var customers = await _unitOfWork.CustomerRepository.GetAllAsync();
+            if (!customers.Any())
+            {
+                return ErrorResponse.Create<PayloadResponse<GetAllCustomersDetailsResponseDTO>>(
+                    FaultMode.REQUESTED_ENTITY_NOT_FOUND,
+                    ResponseCodes.NO_CUSTOMER,
+                    _messageProvider.GetMessage(ResponseCodes.NO_CUSTOMER));
+            }
+            response.SetPayload(new GetAllCustomersDetailsResponseDTO
+            {
+                Customers = customers.Select(x => new CustomersDetails
+                {
+                    Name = x.Name,
+                    PhoneNumber = x.PhoneNumber,
+                    EmailAddress = x.EmailAddress,
+                    StateOfResidence = x.StateOfResidence,
+                    LocalGovernmentOfResidence = x.LocalGovernmentOfResidence,
+                    DateCreated = x.DateCreated.ToString("D")
+                })
+            });
             response.IsSuccessful = true;
             return response;
         }

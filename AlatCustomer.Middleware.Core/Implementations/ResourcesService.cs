@@ -14,12 +14,46 @@ namespace AlatCustomer.Middleware.Core.Implementations
         private readonly SystemSettings _settings;
         private readonly IMessageProvider _messageProvider;
         private readonly IOtpProcessor _otpProcessor;
-        public ResourcesService(IOptions<SystemSettings> settings, IMessageProvider messageProvider, IOtpProcessor otpProcessor)
+        private readonly IBankProcessor _bankProcessor;
+        public ResourcesService(IOptions<SystemSettings> settings, IMessageProvider messageProvider, IOtpProcessor otpProcessor, IBankProcessor bankProcessor)
         {
             _settings = settings.Value;
             _messageProvider = messageProvider;
             _otpProcessor = otpProcessor;
+            _bankProcessor = bankProcessor;
         }
+
+        public async Task<PayloadResponse<GetAllBanksResponseDTO>> GetBanksAsync()
+        {
+            PayloadResponse<GetAllBanksResponseDTO> response = new(false);
+            var serviceResponse = await _bankProcessor.GetAllBanksAsync();
+            if (!serviceResponse.IsSuccessful)
+            {
+                return ErrorResponse.Create<PayloadResponse<GetAllBanksResponseDTO>>(
+                      FaultMode.CLIENT_INVALID_ARGUMENT, serviceResponse.Error.ErrorCode,
+                      serviceResponse.Error.Description);
+            }
+            var banks = serviceResponse.GetPayload();
+            if (!banks.Any())
+            {
+                return ErrorResponse.Create<PayloadResponse<GetAllBanksResponseDTO>>(
+                    FaultMode.REQUESTED_ENTITY_NOT_FOUND,
+                    ResponseCodes.NO_BANK,
+                    _messageProvider.GetMessage(ResponseCodes.NO_BANK));
+            }
+
+            response.SetPayload(new GetAllBanksResponseDTO
+            {
+                Banks = banks.Select(x => new Processors.Implementations.BankProcessor.Bank
+                {
+                    Code = x.Code,
+                    Name = x.Name
+                })
+            });
+            response.IsSuccessful = true;
+            return response;
+        }
+
         public async Task<PayloadResponse<GetLocalGovernmentsResponse>> GetLocalGovernmentsAsync(string stateCode)
         {
             var response = new PayloadResponse<GetLocalGovernmentsResponse>(false);
@@ -27,7 +61,7 @@ namespace AlatCustomer.Middleware.Core.Implementations
             if (!localGovernments.Any())
             {
                 return ErrorResponse.Create<PayloadResponse<GetLocalGovernmentsResponse>>(
-                    FaultMode.CLIENT_INVALID_ARGUMENT,
+                    FaultMode.REQUESTED_ENTITY_NOT_FOUND,
                     ResponseCodes.NO_LGA_FOUND,
                     _messageProvider.GetMessage(ResponseCodes.NO_LGA_FOUND));
             }
@@ -52,7 +86,7 @@ namespace AlatCustomer.Middleware.Core.Implementations
             if (!states.Any())
             {
                 return ErrorResponse.Create<PayloadResponse<GetStatesResponse>>(
-                    FaultMode.CLIENT_INVALID_ARGUMENT,
+                    FaultMode.REQUESTED_ENTITY_NOT_FOUND,
                     ResponseCodes.NO_STATE_FOUND,
                     _messageProvider.GetMessage(ResponseCodes.NO_STATE_FOUND));
             }

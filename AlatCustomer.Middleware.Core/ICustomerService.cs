@@ -7,5 +7,6 @@ namespace AlatCustomer.Middleware.Core
     public interface ICustomerService
     {
         Task<BasicResponse> OnboardCustomerAsync(OnboardCustomerRequestDTO request);
+        Task<PayloadResponse<GetAllCustomersDetailsResponseDTO>> GetAllOnboardedCustomerAsync();
     }
 }

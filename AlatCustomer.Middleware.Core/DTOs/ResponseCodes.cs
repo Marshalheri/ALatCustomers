@@ -6,6 +6,8 @@
         public const string NO_STATE_FOUND = "ALC002";
         public const string NO_LGA_FOUND = "ALC003";
         public const string NO_REQUEST_BODY = "ALC004";
+        public const string NO_CUSTOMER = "ALC005";
+        public const string NO_BANK = "ALC006";
 
 
         public const string GENERAL_ERROR = "ALC999";

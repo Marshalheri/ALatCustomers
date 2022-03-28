@@ -3,9 +3,6 @@ using AlatCustomer.Middleware.Core;
 using AlatCustomer.Middleware.Core.DTOs.Customer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AlatCustomer.Middleware.Client.Controllers
@@ -36,6 +33,23 @@ namespace AlatCustomer.Middleware.Client.Controllers
                 return CreateResponse(result.Error, result.FaultType);
             }
             return Ok();
+        }
+
+        /// <summary>
+        /// Get all onboarded customers
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet()]
+        [ProducesResponseType(typeof(GetAllCustomersDetailsResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetStates()
+        {
+            var result = await _service.GetAllOnboardedCustomerAsync();
+            if (!result.IsSuccessful)
+            {
+                return CreateResponse(result.Error, result.FaultType);
+            }
+            return Ok(result.GetPayload());
         }
     }
 }

@@ -29,6 +29,8 @@ namespace AlatCustomer.Middleware.Core.Fakes
                     ["ALC002"] = "No state was found.",
                     ["ALC003"] = "No local government was found.",
                     ["ALC004"] = "No request body was found.",
+                    ["ALC005"] = "No customer was found.",
+                    ["ALC006"] = "No bank was found.",
 
 
                     ["ALC999"] = "Opps, something went wrong. This is on us, please try again",

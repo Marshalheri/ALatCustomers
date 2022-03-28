@@ -11,6 +11,12 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:AlatCustomer.Middleware.Client.Controllers.CustomerController.GetStates">
+            <summary>
+            Get all onboarded customers
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:AlatCustomer.Middleware.Client.Controllers.ResourcesController.GetStates">
             <summary>
             Request to get list of states
@@ -28,6 +34,12 @@
             Send otp to customer
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AlatCustomer.Middleware.Client.Controllers.ResourcesController.GetBanks">
+            <summary>
+            Request to get list of banks
+            </summary>
             <returns></returns>
         </member>
     </members>

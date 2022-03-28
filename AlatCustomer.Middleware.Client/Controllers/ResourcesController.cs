@@ -22,8 +22,9 @@ namespace AlatCustomer.Middleware.Client.Controllers
         /// Request to get list of states
         /// </summary>
         /// <returns></returns>
-        [HttpGet("state")]
+        [HttpGet("states")]
         [ProducesResponseType(typeof(GetStatesResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetStates()
         {
             var result = await _service.GetStatesAsync();
@@ -40,6 +41,7 @@ namespace AlatCustomer.Middleware.Client.Controllers
         /// <returns></returns>
         [HttpGet("lga/{stateCode}")]
         [ProducesResponseType(typeof(GetLocalGovernmentsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         public async Task<IActionResult> GetLocalGovernments([FromRoute] string stateCode)
         {
@@ -67,6 +69,23 @@ namespace AlatCustomer.Middleware.Client.Controllers
                 return CreateResponse(result.Error, result.FaultType);
             }
             return Ok();
+        }
+
+        /// <summary>
+        /// Request to get list of banks
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("banks")]
+        [ProducesResponseType(typeof(GetStatesResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBanks()
+        {
+            var result = await _service.GetBanksAsync();
+            if (!result.IsSuccessful)
+            {
+                return CreateResponse(result.Error, result.FaultType);
+            }
+            return Ok(result.GetPayload());
         }
     }
 }
